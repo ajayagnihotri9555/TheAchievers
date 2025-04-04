@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Puzzle Challenge</title>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #00CEFF;
+            --dark: #2D3436;
+            --light: #F5F6FA;
+            --correct: #00B894;
+            --wrong: #D63031;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark), #1E272E);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(45, 52, 54, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+        }
+
+        h1 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            text-shadow: 0 0 10px rgba(0, 206, 255, 0.5);
+        }
+
+        .game-screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .active-screen {
+            display: block;
+        }
+
+        /* HOME SCREEN */
+        .home-screen button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        .home-screen button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.6);
+        }
+
+        /* LEVEL SELECT */
+        .levels {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .level-btn {
+            background: rgba(108, 92, 231, 0.2);
+            border: 2px solid var(--primary);
+            color: var(--light);
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .level-btn:hover {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .level-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(214, 48, 49, 0.2);
+            border-color: var(--wrong);
+        }
+
+        /* GAME SCREEN */
+        .puzzle-container {
+            margin: 20px 0;
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .puzzle {
+            font-size: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--secondary);
+            width: 100%;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            background: rgba(0, 206, 255, 0.2);
+            border: 2px solid var(--secondary);
+            color: var(--light);
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+
+        .timer, .score {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .timer {
+            color: var(--secondary);
+        }
+
+        .score {
+            color: var(--primary);
+        }
+
+        /* FEEDBACK ANIMATIONS */
+        .feedback {
+            position: absolute;
+            font-size: 3rem;
+            font-weight: bold;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-100px); }
+        }
+
+        .correct-feedback {
+            color: var(--correct);
+        }
+
+        .wrong-feedback {
+            color: var(--wrong);
+        }
+
+        /* PARTICLE EFFECTS */
+        .particle {
+            position: absolute;
+            background: var(--secondary);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleAnim 1s ease-out forwards;
+        }
+
+        @keyframes particleAnim {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        /* RESULT SCREEN */
+        .result-screen h2 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .star {
+            font-size: 2.5rem;
+            color: #FFD700;
+            opacity: 0.3;
+        }
+
+        .star.active {
+            opacity: 1;
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- HOME SCREEN -->
+        <div class="game-screen home-screen active-screen">
+            <h1>Mind Puzzle Challenge</h1>
+            <p>Test your brain with these tricky puzzles!</p>
+            <button id="start-btn">Start Game</button>
+            <button id="how-to-play-btn">How to Play</button>
+        </div>
+
+        <!-- LEVEL SELECT SCREEN -->
+        <div class="game-screen level-select-screen">
+            <h1>Select Level</h1>
+            <div class="levels" id="level-buttons">
+                <!-- Levels will be added by JavaScript -->
+            </div>
+            <button id="back-to-home-btn">Back</button>
+        </div>
+
+        <!-- HOW TO PLAY SCREEN -->
+        <div class="game-screen how-to-play-screen">
+            <h1>How to Play</h1>
+            <div class="instructions">
+                <p>1. Solve the puzzle by selecting the correct answer</p>
+                <p>2. Each level gets progressively harder</p>
+                <p>3. Complete all levels to unlock expert mode</p>
+                <p>4. Score points for correct answers</p>
+            </div>
+            <button id="back-to-home-btn-2">Back</button>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div class="game-screen game-screen">
+            <div class="timer">Time: <span id="time">30</span>s</div>
+            <div class="score">Score: <span id="score">0</span></div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="puzzle-container">
+                <div class="puzzle" id="puzzle"></div>
+            </div>
+            <div class="options" id="options">
+                <!-- Options will be added by JavaScript -->
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div class="game-screen result-screen">
+            <h2>Level Complete!</h2>
+            <div class="stars" id="stars">
+                <div class="star">★</div>
+                <div class="star">★</div>
+                <div class="star">★</div>
+            </div>
+            <p>Your Score: <span id="final-score">0</span></p>
+            <p>Time Left: <span id="time-left">0</span>s</p>
+            <button id="next-level-btn">Next Level</button>
+            <button id="retry-btn">Retry</button>
+            <button id="back-to-levels-btn">Level Select</button>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            currentScreen: 'home',
+            currentLevel: 1,
+            score: 0,
+            timeLeft: 30,
+            timer: null,
+            levelsUnlocked: 1,
+            levels: [
+                {
+                    name: "Easy",
+                    puzzles: [
+                        { question: "What is 5 + 3?", answer: "8", options: ["6", "8", "9", "7"] },
+                        { question: "Which is the odd one out?", answer: "Apple", options: ["Apple", "Banana", "Orange", "Grape"] },
+                        { question: "Complete the sequence: 2, 4, 6, ?", answer: "8", options: ["7", "8", "10", "9"] }
+                    ]
+                },
+                {
+                    name: "Medium",
+                    puzzles: [
+                        { question: "If 3x = 15, what is x?", answer: "5", options: ["3", "5", "15", "10"] },
+                        { question: "Which shape has 5 sides?", answer: "Pentagon", options: ["Square", "Pentagon", "Hexagon", "Triangle"] },
+                        { question: "What is 12 × 7?", answer: "84", options: ["72", "84", "96", "108"] }
+                    ]
+                },
+                {
+                    name: "Hard",
+                    puzzles: [
+                        { question: "What is the next prime number after 7?", answer: "11", options: ["9", "11", "13", "15"] },
+                        { question: "If a train travels 60mph for 2.5 hours, how far does it go?", answer: "150 miles", options: ["120 miles", "150 miles", "180 miles", "200 miles"] },
+                        { question: "What is 25% of 200?", answer: "50", options: ["25", "50", "75", "100"] }
+                    ]
+                }
+            ],
+            currentPuzzleIndex: 0,
+            correctAnswers: 0
+        };
+
+        // DOM Elements
+        const screens = {
+            home: document.querySelector('.home-screen'),
+            levelSelect: document.querySelector('.level-select-screen'),
+            howToPlay: document.querySelector('.how-to-play-screen'),
+            game: document.querySelector('.game-screen'),
+            result: document.querySelector('.result-screen')
+        };
+
+        const buttons = {
+            start: document.getElementById('start-btn'),
+            howToPlay: document.getElementById('how-to-play-btn'),
+            backToHome: document.getElementById('back-to-home-btn'),
+            backToHome2: document.getElementById('back-to-home-btn-2'),
+            nextLevel: document.getElementById('next-level-btn'),
+            retry: document.getElementById('retry-btn'),
+            backToLevels: document.getElementById('back-to-levels-btn')
+        };
+
+        const gameElements = {
+            puzzle: document.getElementById('puzzle'),
+            options: document.getElementById('options'),
+            time: document.getElementById('time'),
+            score: document.getElementById('score'),
+            progressBar: document.getElementById('progress-bar'),
+            finalScore: document.getElementById('final-score'),
+            timeLeft: document.getElementById('time-left'),
+            stars: document.getElementById('stars'),
+            levelButtons: document.getElementById('level-buttons')
+        };
+
+        // Initialize the game
+        function initGame() {
+            setupEventListeners();
+            renderLevelButtons();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            buttons.start.addEventListener('click', () => showScreen('levelSelect'));
+            buttons.howToPlay.addEventListener('click', () => showScreen('howToPlay'));
+            buttons.backToHome.addEventListener('click', () => showScreen('home'));
+            buttons.backToHome2.addEventListener('click', () => showScreen('home'));
+            buttons.nextLevel.addEventListener('click', nextLevel);
+            buttons.retry.addEventListener('click', startLevel);
+            buttons.backToLevels.addEventListener('click', () => showScreen('levelSelect'));
+        }
+
+        // Show a specific screen
+        function showScreen(screenName) {
+            gameState.currentScreen = screenName;
+            
+            // Hide all screens
+            Object.values(screens).forEach(screen => {
+                screen.classList.remove('active-screen');
+            });
+            
+            // Show the requested screen
+            screens[screenName].classList.add('active-screen');
+            
+            // Special setup for certain screens
+            if (screenName === 'levelSelect') {
+                renderLevelButtons();
+            } else if (screenName === 'game') {
+                startLevel();
+            }
+        }
+
+        // Render level selection buttons
+        function renderLevelButtons() {
+            gameElements.levelButtons.innerHTML = '';
+            
+            gameState.levels.forEach((level, index) => {
+                const button = document.createElement('div');
+                button.className = `level-btn ${index + 1 > gameState.levelsUnlocked ? 'locked' : ''}`;
+                button.textContent = '${index + 1}: ${level.name}';
+                
+                if (index + 1 <= gameState.levelsUnlocked) {
+                    button.addEventListener('click', () => {
+                        gameState.currentLevel = index + 1;
+                        showScreen('game');
+                    });
+                }
+                
+                gameElements.levelButtons.appendChild(button);
+            });
+        }
+
+        // Start a level
+        function startLevel() {
+            gameState.currentPuzzleIndex = 0;
+            gameState.score = 0;
+            gameState.timeLeft = 30;
+            gameState.correctAnswers = 0;
+            
+            updateScore();
+            updateTimer();
+            startTimer();
+            loadPuzzle();
+        }
+
+        // Load the current puzzle
+        function loadPuzzle() {
+            const level = gameState.levels[gameState.currentLevel - 1];
+            const puzzle = level.puzzles[gameState.currentPuzzleIndex];
+            
+            gameElements.puzzle.textContent = puzzle.question;
+            gameElements.options.innerHTML = '';
+            
+            // Shuffle options
+            const shuffledOptions = [...puzzle.options].sort(() => Math.random() - 0.5);
+            
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.addEventListener('click', () => checkAnswer(option, puzzle.answer));
+                gameElements.options.appendChild(button);
+            });
+            
+            // Update progress
+            const progress = (gameState.currentPuzzleIndex / level.puzzles.length) * 100;
+            gameElements.progressBar.style.width = '${progress}%' ;
+        }
+
+        // Check the selected answer
+        function checkAnswer(selectedAnswer, correctAnswer) {
+            const isCorrect = selectedAnswer === correctAnswer;
+            const puzzleContainer = document.querySelector('.puzzle-container');
+            
+            // Create feedback element
+            const feedback = document.createElement('div');
+            feedback.className = `feedback ${isCorrect ? 'correct-feedback' : 'wrong-feedback'}`;
+            feedback.textContent = isCorrect ? 'Correct!' : 'Wrong!';
+            puzzleContainer.appendChild(feedback);
+            
+            // Remove feedback after animation
+            setTimeout(() => feedback.remove(), 1000);
+            
+            if (isCorrect) {
+                gameState.score += 10;
+                gameState.correctAnswers++;
+                createParticles(puzzleContainer, 10);
+            } else {
+                gameState.score = Math.max(0, gameState.score - 5);
+                puzzleContainer.classList.add('shake');
+                setTimeout(() => puzzleContainer.classList.remove('shake'), 500);
+            }
+            
+            updateScore();
+            
+            // Move to next puzzle or end level
+            const level = gameState.levels[gameState.currentLevel - 1];
+            gameState.currentPuzzleIndex++;
+            
+            if (gameState.currentPuzzleIndex < level.puzzles.length) {
+                setTimeout(loadPuzzle, 1000);
+            } else {
+                endLevel();
+            }
+        }
+
+        // Create particle effects
+        function createParticles(container, count) {
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random position
+                const x = Math.random() * container.offsetWidth;
+                const y = Math.random() * container.offsetHeight;
+                
+                // Random movement
+                const tx = (Math.random() - 0.5) * 100;
+                const ty = (Math.random() - 0.5) * 100;
+                
+                particle.style.left = `${x}px ` ;
+                particle.style.top =` ${y}px`;
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                
+                container.appendChild(particle);
+                
+                // Remove after animation
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        // Update score display
+        function updateScore() {
+            gameElements.score.textContent = gameState.score;
+        }
+
+        // Start the timer
+        function startTimer() {
+            clearInterval(gameState.timer);
+            gameState.timer = setInterval(() => {
+                gameState.timeLeft--;
+                updateTimer();
+                
+                if (gameState.timeLeft <= 0) {
+                    endLevel();
+                }
+            }, 1000);
+        }
+
+        // Update timer display
+        function updateTimer() {
+            gameElements.time.textContent = gameState.timeLeft;
+        }
+
+        // End the current level
+        function endLevel() {
+            clearInterval(gameState.timer);
+            
+            // Calculate stars (1-3)
+            const level = gameState.levels[gameState.currentLevel - 1];
+            const percentage = (gameState.correctAnswers / level.puzzles.length) * 100;
+            
+            let stars = 1;
+            if (percentage >= 80) stars = 3;
+            else if (percentage >= 50) stars = 2;
+            
+            // Show stars
+            const starElements = gameElements.stars.querySelectorAll('.star');
+            starElements.forEach((star, index) => {
+                if (index < stars) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            
+            // Update result screen
+            gameElements.finalScore.textContent = gameState.score;
+            gameElements.timeLeft.textContent = gameState.timeLeft;
+            
+            // Unlock next level if all puzzles correct
+            if (stars === 3 && gameState.currentLevel === gameState.levelsUnlocked) {
+                gameState.levelsUnlocked = Math.min(gameState.levelsUnlocked + 1, gameState.levels.length);
+            }
+            
+            showScreen('result');
+        }
+
+        // Move to next level
+        function nextLevel() {
+            if (gameState.currentLevel < gameState.levels.length) {
+                gameState.currentLevel++;
+                showScreen('game');
+            } else {
+                showScreen('levelSelect');
+            }
+        }
+
+        // Initialize the game when the page loads
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>

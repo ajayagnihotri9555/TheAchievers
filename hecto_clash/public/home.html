@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathMaster - Competitive Mental Math</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #4ade80;
+            --danger: #f87171;
+            --warning: #fbbf24;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark), #16213e);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(76, 201, 240, 0.2);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        /* Auth Buttons */
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Content */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-content h1 span {
+            color: var(--accent);
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-image {
+            position: relative;
+            height: 400px;
+        }
+
+        .game-preview {
+            width: 100%;
+            height: 100%;
+            background: rgba(76, 201, 240, 0.1);
+            border-radius: 20px;
+            border: 2px solid var(--accent);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(76, 201, 240, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .leaderboard h2 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            color: var(--accent);
+        }
+
+        tr:hover {
+            background: rgba(76, 201, 240, 0.05);
+        }
+
+        .rank {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .rank-1 {
+            color: gold;
+        }
+
+        .rank-2 {
+            color: silver;
+        }
+
+        .rank-3 {
+            color: #cd7f32; /* bronze */
+        }
+
+        /* Auth Modals */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            border: 1px solid var(--accent);
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-group input {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.3);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .switch-form {
+            color: var(--accent);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-image {
+                height: 300px;
+                order: -1;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Auth Buttons -->
+        <header>
+            <div class="logo">
+                <span>Math</span>Master
+            </div>
+            <div class="auth-buttons">
+                <button class="btn btn-outline" id="login-btn">Login</button>
+                <button class="btn btn-primary" id="register-btn">Register</button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Become a <span>Mental Math</span> Champion</h1>
+                <p>Challenge your brain, compete with players worldwide, and climb the leaderboards in our competitive mental math platform.</p>
+                <div class="hero-buttons">
+                    <a href="index.html" target="_blank">
+                        <button class="btn btn-primary" style="padding: 0.75rem 2rem;">Play Now</button>
+                      </a>
+                      
+                    <button class="btn btn-outline">How to Play</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="game-preview">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent);">27 × 14 = ?</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; width: 300px;">
+                            <button style="padding: 0.5rem; border-radius: 8px; background: rgba(76, 201, 240, 0.2); border: 1px solid var(--accent); color: white;">378</button>
+                            <button style="padding: 0.5rem; border-radius: 8px; background: rgba(76, 201, 240, 0.2); border: 1px solid var(--accent); color: white;">392</button>
+                            <button style="padding: 0.5rem; border-radius: 8px; background: rgba(76, 201, 240, 0.2); border: 1px solid var(--accent); color: white;">364</button>
+                            <button style="padding: 0.5rem; border-radius: 8px; background: rgba(76, 201, 240, 0.2); border: 1px solid var(--accent); color: white;">358</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Competitive Leaderboards</h3>
+                <p>Climb the ranks and compete against players worldwide in real-time math battles.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast-Paced Gameplay</h3>
+                <p>Test your speed and accuracy with timed challenges that push your mental limits.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Progress Tracking</h3>
+                <p>Detailed stats show your improvement in different math operations over time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <h3>Multiple Game Modes</h3>
+                <p>Choose from Speed Drills, Marathon Mode, Tournament Play, and more.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Social Features</h3>
+                <p>Challenge friends, join clans, and share your achievements.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏅</div>
+                <h3>Achievements</h3>
+                <p>Earn badges and trophies for completing challenges and reaching milestones.</p>
+            </div>
+        </section>
+
+        <!-- Leaderboard Section -->
+        <section class="leaderboard">
+            <h2>🏆 Global Leaderboard</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Level</th>
+                        <th>Points</th>
+                        <th>Accuracy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="rank rank-1">1</td>
+                        <td>MathWizard42</td>
+                        <td>Grand Master</td>
+                        <td>12,450</td>
+                        <td>98%</td>
+                    </tr>
+                    <tr>
+                        <td class="rank rank-2">2</td>
+                        <td>NumberNinja</td>
+                        <td>Master</td>
+                        <td>11,870</td>
+                        <td>96%</td>
+                    </tr>
+                    <tr>
+                        <td class="rank rank-3">3</td>
+                        <td>CalcQueen</td>
+                        <td>Master</td>
+                        <td>11,230</td>
+                        <td>95%</td>
+                    </tr>
+                    <tr>
+                        <td class="rank">4</td>
+                        <td>BrainyBeast</td>
+                        <td>Expert</td>
+                        <td>9,850</td>
+                        <td>93%</td>
+                    </tr>
+                    <tr>
+                        <td class="rank">5</td>
+                        <td>QuickCount</td>
+                        <td>Expert</td>
+                        <td>9,120</td>
+                        <td>91%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Login Modal -->
+        <div class="modal" id="login-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Login to Your Account</h2>
+                <form class="auth-form" id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <div class="form-footer">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <span class="switch-form" id="show-register">Need an account? Register</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Registration Modal -->
+        <div class="modal" id="register-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Create Your Account</h2>
+                <form class="auth-form" id="register-form">
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm">Confirm Password</label>
+                        <input type="password" id="register-confirm" required>
+                    </div>
+                    <div class="form-footer">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <span class="switch-form" id="show-login">Already have an account? Login</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const closeModals = document.querySelectorAll('.close-modal');
+        const showRegister = document.getElementById('show-register');
+        const showLogin = document.getElementById('show-login');
+        
+        // Auth Forms
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+
+        // Show Login Modal
+        loginBtn.addEventListener('click', () => {
+            loginModal.classList.add('active');
+        });
+
+        // Show Register Modal
+        registerBtn.addEventListener('click', () => {
+            registerModal.classList.add('active');
+        });
+
+        // Close Modals
+        closeModals.forEach(btn => {
+            btn.addEventListener('click', () => {
+                loginModal.classList.remove('active');
+                registerModal.classList.remove('active');
+            });
+        });
+
+        // Switch between Login and Register
+        showRegister.addEventListener('click', () => {
+            loginModal.classList.remove('active');
+            registerModal.classList.add('active');
+        });
+
+        showLogin.addEventListener('click', () => {
+            registerModal.classList.remove('active');
+            loginModal.classList.add('active');
+        });
+
+        // Close when clicking outside modal
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.classList.remove('active');
+            }
+            if (e.target === registerModal) {
+                registerModal.classList.remove('active');
+            }
+        });
+
+        // Form Submissions (simulated)
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Login functionality would be implemented here');
+            loginModal.classList.remove('active');
+        });
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Registration functionality would be implemented here');
+            registerModal.classList.remove('active');
+        });
+
+        // Sample user data (for demonstration)
+        const sampleUsers = [
+            { username: "MathWizard42", level: "Grand Master", points: 12450, accuracy: 98 },
+            { username: "NumberNinja", level: "Master", points: 11870, accuracy: 96 },
+            { username: "CalcQueen", level: "Master", points: 11230, accuracy: 95 },
+            { username: "BrainyBeast", level: "Expert", points: 9850, accuracy: 93 },
+            { username: "QuickCount", level: "Expert", points: 9120, accuracy: 91 }
+        ];
+
+        // In a real app, you would fetch this data from a server
+        console.log("Sample leaderboard data:", sampleUsers);
+    </script>
+</body>
+</html>

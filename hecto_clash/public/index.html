@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathMaster - Competitive Mental Math Game</title>
+    <style>
+        /* ===== Global Styles ===== */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #4ade80;
+            --danger: #f87171;
+            --warning: #fbbf24;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== Header/Navigation ===== */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .auth-buttons .btn {
+            margin-left: 1rem;
+        }
+
+        /* ===== Button Styles ===== */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+            color: var(--dark);
+        }
+
+        .btn-accent:hover {
+            background-color: #3aa8d8;
+            transform: translateY(-2px);
+        }
+
+        /* ===== Page Styles ===== */
+        .page {
+            display: none;
+            padding: 2rem 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== Home Page ===== */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(76, 201, 240, 0.1));
+            border-radius: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* ===== Auth Pages ===== */
+        .auth-container {
+            max-width: 500px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            outline: none;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        /* ===== Dashboard ===== */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stats-card h3 {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-card p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stats-card.highlight {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .stats-card.highlight h3,
+        .stats-card.highlight p {
+            color: white;
+        }
+
+        /* ===== Leaderboard ===== */
+        .leaderboard-table {
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .leaderboard-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .leaderboard-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .leaderboard-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .rank {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .rank-1 {
+            color: gold;
+            font-weight: 800;
+        }
+
+        .rank-2 {
+            color: silver;
+            font-weight: 800;
+        }
+
+        .rank-3 {
+            color: #cd7f32; /* bronze */
+            font-weight: 800;
+        }
+
+        /* ===== Game Page ===== */
+        .game-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .game-stat {
+            background: #f5f7fa;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .problem-display {
+            font-size: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            outline: none;
+        }
+
+        .game-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    Math<span>Master</span>
+                </div>
+                <div class="nav-links">
+                    <a href="home.html" onclick="showPage('home')">Home</a>
+                    <a href="third.html" onclick="showPage('game')">Play</a>
+                    <a href="#" onclick="showPage('leaderboard')">Leaderboard</a>
+                    <a href="#" onclick="showPage('dashboard')">Dashboard</a>
+                </div>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline" onclick="showPage('login')">Login</a>
+                    <a href="#" class="btn btn-primary" onclick="showPage('register')">Register</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Home Page -->
+        <div id="home-page" class="page active">
+            <section class="hero">
+                <h1>Master Mental Math Through Competition</h1>
+                <p>Challenge your brain, compete with others, and climb the leaderboard in our exciting mental math game.</p>
+                <div>
+                    <a href="#" class="btn btn-primary btn-lg" onclick="showPage('register')">Get Started</a>
+                    <a href="#" class="btn btn-outline btn-lg" onclick="showPage('game')">Play as Guest</a>
+                </div>
+            </section>
+
+            <section class="features">
+                <div class="feature-card">
+                    <h3>Real-time Competition</h3>
+                    <p>Challenge players from around the world in live math duels and see who's the fastest.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Progress Tracking</h3>
+                    <p>Track your improvement with detailed statistics and personalized feedback.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Multiple Game Modes</h3>
+                    <p>Choose from various game modes including speed challenges, endurance tests, and tournaments.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login-page" class="page">
+            <div class="auth-container">
+                <h2>Login to Your Account</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="#" onclick="showPage('register')">Register here</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Page -->
+        <div id="register-page" class="page">
+            <div class="auth-container">
+                <h2>Create an Account</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirm Password</label>
+                        <input type="password" id="register-confirm-password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Register</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="#" onclick="showPage('login')">Login here</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page">
+            <div class="dashboard-header">
+                <div class="user-profile">
+                    <div class="avatar">JD</div>
+                    <div>
+                        <h2>John Doe</h2>
+                        <p>Math Master</p>
+                    </div>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-accent" onclick="showPage('game')">New Game</a>
+                </div>
+            </div>
+
+            <div class="stats-cards">
+                <div class="stats-card highlight">
+                    <h3>Current Rank</h3>
+                    <p>#24</p>
+                </div>
+                <div class="stats-card">
+                    <h3>Total Points</h3>
+                    <p>1,245</p>
+                </div>
+                <div class="stats-card">
+                    <h3>Games Played</h3>
+                    <p>87</p>
+                </div>
+                <div class="stats-card">
+                    <h3>Accuracy</h3>
+                    <p>92%</p>
+                </div>
+            </div>
+
+            <h3>Recent Activity</h3>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Game Mode</th>
+                        <th>Score</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Today</td>
+                        <td>Speed Challenge</td>
+                        <td>150</td>
+                        <td><span style="color: var(--success)">Won</span></td>
+                    </tr>
+                    <tr>
+                        <td>Yesterday</td>
+                        <td>Endurance Test</td>
+                        <td>320</td>
+                        <td><span style="color: var(--success)">Won</span></td>
+                    </tr>
+                    <tr>
+                        <td>2 days ago</td>
+                        <td>Tournament</td>
+                        <td>280</td>
+                        <td><span style="color: var(--danger)">Lost</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Leaderboard Page -->
+        <div id="leaderboard-page" class="page">
+            <h2>Global Leaderboard</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Points</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="rank rank-1">1</td>
+                        <td>MathWizard99</td>
+                        <td>5,420</td>
+                        <td>Grand Master</td>
+                    </tr>
+                    <tr>
+                        <td class="rank rank-2">2</td>
+                        <td>NumberNinja</td>
+                        <td>5,150</td>
+                        <td>Grand Master</td>
+                    </tr>
+                    <tr>
+                        <td class="rank rank-3">3</td>
+                        <td>CalcQueen</td>
+                        <td>4,980</td>
+                        <td>Master</td>
+                    </tr>
+                    <tr>
+                        <td class="rank">4</td>
+                        <td>FastAddy</td>
+                        <td>4,750</td>
+                        <td>Master</td>
+                    </tr>
+                    <tr>
+                        <td class="rank">5</td>
+                        <td>DivideDude</td>
+                        <td>4,620</td>
+                        <td>Master</td>
+                    </tr>
+                    <tr>
+                        <td class="rank">24</td>
+                        <td>JohnDoe</td>
+                        <td>1,245</td>
+                        <td>Advanced</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Game Page -->
+        <div id="game-page" class="page">
+            <div class="game-container">
+                <div class="game-header">
+                    <h2>Speed Challenge</h2>
+                    <div class="game-stats">
+                        <div class="game-stat">Score: 0</div>
+                        <div class="game-stat">Time: 60s</div>
+                        <div class="game-stat">Streak: 0x</div>
+                    </div>
+                </div>
+
+                <div class="problem-display">27 × 14</div>
+
+                <input type="number" class="answer-input" placeholder="Your answer..." autofocus>
+
+                <div class="game-actions">
+                    <button class="btn btn-primary">Submit</button>
+                    <button class="btn btn-outline">Skip</button>
+                </div>
+            </div>
+
+            <div class="game-modes">
+                <h3>Other Game Modes</h3>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button class="btn btn-outline">Endurance Test</button>
+                    <button class="btn btn-outline">Tournament</button>
+                    <button class="btn btn-outline">Practice Mode</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            currentUser: null,
+            users: [
+                { id: 1, username: "JohnDoe", email: "john@example.com", password: "password123", points: 1245, rank: 24 }
+            ],
+            leaderboard: [
+                { rank: 1, username: "MathWizard99", points: 5420, level: "Grand Master" },
+                { rank: 2, username: "NumberNinja", points: 5150, level: "Grand Master" },
+                { rank: 3, username: "CalcQueen", points: 4980, level: "Master" },
+                { rank: 4, username: "FastAddy", points: 4750, level: "Master" },
+                { rank: 5, username: "DivideDude", points: 4620, level: "Master" },
+                { rank: 24, username: "JohnDoe", points: 1245, level: "Advanced" }
+            ]
+        };
+
+        // DOM Elements
+        const pages = {
+            home: document.getElementById('home-page'),
+            login: document.getElementById('login-page'),
+            register: document.getElementById('register-page'),
+            dashboard: document.getElementById('dashboard-page'),
+            leaderboard: document.getElementById('leaderboard-page'),
+            game: document.getElementById('game-page')
+        };
+
+        // Form Elements
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+
+        // Show a specific page
+        function showPage(pageName) {
+            // Hide all pages
+            Object.values(pages).forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show the requested page
+            pages[pageName].classList.add('active');
+            
+            // Special cases
+            if (pageName === 'dashboard' && !gameState.currentUser) {
+                showPage('login');
+                return;
+            }
+        }
+
+        // Handle login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Find user
+            const user = gameState.users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                gameState.currentUser = user;
+                showPage('dashboard');
+                alert('Login successful!');
+            } else {
+                alert('Invalid email or password');
+            }
+        });
+
+        // Handle registration
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            // Validation
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            if (gameState.users.some(u => u.email === email)) {
+                alert('Email already registered');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: gameState.users.length + 1,
+                username,
+                email,
+                password,
+                points: 0,
+                rank: gameState.users.length + 1
+            };
+            
+            gameState.users.push(newUser);
+            gameState.currentUser = newUser;
+            
+            alert('Registration successful!');
+            showPage('dashboard');
+        });
+
+        // Initialize the page
+        showPage('home');
+    </script>
+</body>
+</html>
