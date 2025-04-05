@@ -7,26 +7,26 @@
     <style>
         /* ===== Global Styles ===== */
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #4cc9f0;
-            --dark: #1a1a2e;
-            --light: #f8f9fa;
-            --success: #4ade80;
-            --danger: #f87171;
-            --warning: #fbbf24;
+            --primary: #ff6b6b; /* Vibrant Coral */
+            --secondary: #4ecdc4; /* Turquoise */
+            --accent: #ffe66d; /* Bright Yellow */
+            --dark: #2d3436; /* Dark Gray */
+            --light: #f8e1e9; /* Soft Pink */
+            --success: #55efc4; /* Light Green */
+            --danger: #ff7675; /* Soft Red */
+            --warning: #feca57; /* Warm Yellow */
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f5f7fa;
-            color: #333;
+            background: linear-gradient(135deg, #f8e1e9, #d8e2dc); /* Pink to Light Gray */
+            color: var(--dark);
             min-height: 100vh;
         }
 
@@ -39,7 +39,7 @@
         /* ===== Header/Navigation ===== */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            color: var(--light);
             padding: 1rem 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: sticky;
@@ -58,6 +58,7 @@
             font-weight: 700;
             display: flex;
             align-items: center;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .logo span {
@@ -70,10 +71,11 @@
         }
 
         .nav-links a {
-            color: white;
+            color: var(--light);
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
+            font-family: 'Roboto', sans-serif;
         }
 
         .nav-links a:hover {
@@ -94,37 +96,38 @@
             border: none;
             text-decoration: none;
             display: inline-block;
+            font-family: 'Poppins', sans-serif;
         }
 
         .btn-primary {
-            background-color: var(--primary);
-            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
         }
 
         .btn-primary:hover {
-            background-color: var(--secondary);
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
         }
 
         .btn-outline {
             background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
+            color: var(--accent);
+            border: 2px solid var(--accent);
         }
 
         .btn-outline:hover {
-            background-color: var(--primary);
-            color: white;
+            background: var(--accent);
+            color: var(--dark);
         }
 
         .btn-accent {
-            background-color: var(--accent);
+            background: linear-gradient(135deg, var(--accent), var(--warning));
             color: var(--dark);
         }
 
         .btn-accent:hover {
-            background-color: #3aa8d8;
+            background: var(--warning);
             transform: translateY(-2px);
         }
 
@@ -148,7 +151,7 @@
         .hero {
             text-align: center;
             padding: 4rem 0;
-            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(76, 201, 240, 0.1));
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(78, 205, 196, 0.2));
             border-radius: 20px;
             margin-bottom: 3rem;
         }
@@ -157,13 +160,16 @@
             font-size: 3rem;
             margin-bottom: 1rem;
             color: var(--dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
         }
 
         .hero p {
             font-size: 1.2rem;
-            color: #555;
+            color: #636e72;
             max-width: 700px;
             margin: 0 auto 2rem;
+            font-family: 'Roboto', sans-serif;
         }
 
         .features {
@@ -174,7 +180,7 @@
         }
 
         .feature-card {
-            background: white;
+            background: linear-gradient(135deg, var(--light), #ffffff);
             padding: 2rem;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -189,13 +195,20 @@
         .feature-card h3 {
             color: var(--primary);
             margin-bottom: 1rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            font-family: 'Roboto', sans-serif;
+            color: #636e72;
         }
 
         /* ===== Auth Pages ===== */
         .auth-container {
             max-width: 500px;
             margin: 2rem auto;
-            background: white;
+            background: linear-gradient(135deg, var(--light), #ffffff);
             padding: 2rem;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -205,6 +218,8 @@
             text-align: center;
             margin-bottom: 1.5rem;
             color: var(--dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
         }
 
         .form-group {
@@ -215,26 +230,36 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
+            font-family: 'Roboto', sans-serif;
+            color: var(--primary);
         }
 
         .form-control {
             width: 100%;
             padding: 0.8rem 1rem;
-            border: 1px solid #ddd;
+            border: 1px solid var(--accent);
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff;
         }
 
         .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
             outline: none;
         }
 
         .auth-footer {
             text-align: center;
             margin-top: 1.5rem;
+            font-family: 'Roboto', sans-serif;
+            color: #636e72;
+        }
+
+        .auth-footer a {
+            color: var(--primary);
         }
 
         /* ===== Dashboard ===== */
@@ -255,13 +280,25 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             font-size: 1.2rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .dashboard-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .dashboard-header p {
+            font-family: 'Roboto', sans-serif;
+            color: #636e72;
         }
 
         .stats-cards {
@@ -272,38 +309,40 @@
         }
 
         .stats-card {
-            background: white;
+            background: linear-gradient(135deg, var(--light), #ffffff);
             padding: 1.5rem;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .stats-card h3 {
-            color: #666;
+            color: var(--secondary);
             font-size: 1rem;
             margin-bottom: 0.5rem;
+            font-family: 'Poppins', sans-serif;
         }
 
         .stats-card p {
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--dark);
+            font-family: 'Montserrat', sans-serif;
         }
 
         .stats-card.highlight {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            color: var(--light);
         }
 
         .stats-card.highlight h3,
         .stats-card.highlight p {
-            color: white;
+            color: var(--light);
         }
 
         /* ===== Leaderboard ===== */
         .leaderboard-table {
             width: 100%;
-            background: white;
+            background: linear-gradient(135deg, var(--light), #ffffff);
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             overflow: hidden;
@@ -314,45 +353,48 @@
         .leaderboard-table td {
             padding: 1rem;
             text-align: left;
+            font-family: 'Roboto', sans-serif;
         }
 
         .leaderboard-table th {
-            background-color: var(--primary);
-            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
             font-weight: 600;
+            font-family: 'Poppins', sans-serif;
         }
 
         .leaderboard-table tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: rgba(255, 230, 109, 0.1); /* Light Yellow Tint */
         }
 
         .leaderboard-table tr:hover {
-            background-color: #f1f1f1;
+            background-color: rgba(255, 107, 107, 0.1); /* Coral Tint */
         }
 
         .rank {
             font-weight: 700;
-            color: var(--primary);
+            color: var(--secondary);
+            font-family: 'Montserrat', sans-serif;
         }
 
         .rank-1 {
-            color: gold;
+            color: #ffd700; /* Gold */
             font-weight: 800;
         }
 
         .rank-2 {
-            color: silver;
+            color: #c0c0c0; /* Silver */
             font-weight: 800;
         }
 
         .rank-3 {
-            color: #cd7f32; /* bronze */
+            color: #cd7f32; /* Bronze */
             font-weight: 800;
         }
 
         /* ===== Game Page ===== */
         .game-container {
-            background: white;
+            background: linear-gradient(135deg, var(--light), #ffffff);
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             padding: 2rem;
@@ -371,10 +413,12 @@
         }
 
         .game-stat {
-            background: #f5f7fa;
+            background: linear-gradient(135deg, var(--accent), var(--warning));
             padding: 0.5rem 1rem;
             border-radius: 50px;
             font-weight: 600;
+            color: var(--dark);
+            font-family: 'Poppins', sans-serif;
         }
 
         .problem-display {
@@ -382,7 +426,8 @@
             text-align: center;
             margin: 2rem 0;
             font-weight: 700;
-            color: var(--dark);
+            color: var(--primary);
+            font-family: 'Montserrat', sans-serif;
         }
 
         .answer-input {
@@ -390,15 +435,17 @@
             padding: 1rem;
             font-size: 1.5rem;
             text-align: center;
-            border: 2px solid #ddd;
+            border: 2px solid var(--accent);
             border-radius: 10px;
             margin-bottom: 1rem;
             transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff;
         }
 
         .answer-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
             outline: none;
         }
 
@@ -406,6 +453,12 @@
             display: flex;
             justify-content: center;
             gap: 1rem;
+        }
+
+        .game-modes h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark);
+            font-weight: 700;
         }
 
         /* ===== Responsive Design ===== */
@@ -442,8 +495,8 @@
                     Hecto<span>Clash</span>
                 </div>
                 <div class="nav-links">
-                    <a href="home.html" onclick="showPage('home')">Home</a>
-                    <a href="fourth.html" onclick="showPage('game')">Play</a>
+                    <a href="index.html" onclick="showPage('home')">Home</a>
+                    <a href="MathMaster.html" onclick="showPage('game')">Play</a>
                     <a href="#" onclick="showPage('leaderboard')">Leaderboard</a>
                     <a href="#" onclick="showPage('dashboard')">Dashboard</a>
                 </div>
@@ -657,27 +710,27 @@
         <!-- Game Page -->
         <div id="game-page" class="page">
             <div class="game-container">
-                <div class="game-header">
-                    <h2>Speed Challenge</h2>
-                    <div class="game-stats">
-                        <div class="game-stat">Score: 0</div>
-                        <div class="game-stat">Time: 60s</div>
-                        <div class="game-stat">Streak: 0x</div>
-                    </div>
+              <div class="game-header">
+                <h2>Speed Challenge</h2>
+                <div class="game-stats">
+                  <div class="game-stat" id="score">Score: 0</div>
+                  <div class="game-stat" id="time">Time: 60s</div>
+                  <div class="game-stat" id="streak">Streak: 0x</div>
                 </div>
-
-                <div class="problem-display">27 × 14</div>
-
-                <input type="number" class="answer-input" placeholder="Your answer..." autofocus>
-
-                <div class="game-actions">
-                    <button class="btn btn-primary">Submit</button>
-                    <button class="btn btn-outline">Skip</button>
-                </div>
+              </div>
+          
+              <div class="problem-display" id="problem">0 × 0</div>
+          
+              <input type="number" class="answer-input" id="answer" placeholder="Your answer..." autofocus>
+          
+              <div class="game-actions">
+                <button class="btn btn-primary" id="submit">Submit</button>
+                <button class="btn btn-outline" id="skip">Skip</button>
+              </div>
             </div>
-
+          </div>
             <div class="game-modes">
-                <h3>Other Game Modes</h3>
+                <h3> Other Game Modes</h3>
                 <div style="display: flex; gap: 1rem; margin-top: 1rem;">
                     <button class="btn btn-outline">Endurance Test</button>
                     <button class="btn btn-outline">Tournament</button>
@@ -689,110 +742,249 @@
 
     <script>
         // Game State
-        const gameState = {
-            currentUser: null,
-            users: [
-                { id: 1, username: "JohnDoe", email: "john@example.com", password: "password123", points: 1245, rank: 24 }
-            ],
-            leaderboard: [
-                { rank: 1, username: "MathWizard42", points: 5420, level: "Grand Master" },
-                { rank: 2, username: "NumberNinja", points: 5150, level: "Grand Master" },
-                { rank: 3, username: "CalcQueen", points: 4980, level: "Master" },
-                { rank: 4, username: "FastAddy", points: 4750, level: "Master" },
-                { rank: 5, username: "DivideDude", points: 4620, level: "Master" },
-                { rank: 24, username: "JohnDoe", points: 1245, level: "Advanced" }
-            ]
-        };
+       // Game State
+const gameState = {
+    currentUser: null,
+    users: [
+        { id: 1, username: "Ajay Agnihotri", email: "agni9555@gmail.com", password: "password123", points: 1245, rank: 24 }
+    ],
+    leaderboard: [
+        { rank: 1, username: "MathWizard42", points: 5420, level: "Grand Master" },
+        { rank: 2, username: "NumberNinja", points: 5150, level: "Grand Master" },
+        { rank: 3, username: "CalcQueen", points: 4980, level: "Master" },
+        { rank: 4, username: "FastAddy", points: 4750, level: "Master" },
+        { rank: 5, username: "DivideDude", points: 4620, level: "Master" },
+        { rank: 24, username: "Ajay Agnihotri", points: 1245, level: "Advanced" }
+    ],
+    // Game session state
+    score: 0,
+    timeLeft: 60,
+    streak: 0,
+    currentProblem: null,
+    timer: null
+};
 
-        // DOM Elements
-        const pages = {
-            home: document.getElementById('home-page'),
-            login: document.getElementById('login-page'),
-            register: document.getElementById('register-page'),
-            dashboard: document.getElementById('dashboard-page'),
-            leaderboard: document.getElementById('leaderboard-page'),
-            game: document.getElementById('game-page')
-        };
+// DOM Elements
+const pages = {
+    home: document.getElementById('home-page'),
+    login: document.getElementById('login-page'),
+    register: document.getElementById('register-page'),
+    dashboard: document.getElementById('dashboard-page'),
+    leaderboard: document.getElementById('leaderboard-page'),
+    game: document.getElementById('game-page')
+};
 
-        // Form Elements
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
+// Game Elements
+const problemElement = document.getElementById('problem');
+const answerInput = document.getElementById('answer');
+const submitButton = document.getElementById('submit');
+const skipButton = document.getElementById('skip');
+const scoreElement = document.getElementById('score');
+const timeElement = document.getElementById('time');
+const streakElement = document.getElementById('streak');
 
-        // Show a specific page
-        function showPage(pageName) {
-            // Hide all pages
-            Object.values(pages).forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Show the requested page
-            pages[pageName].classList.add('active');
-            
-            // Special cases
-            if (pageName === 'dashboard' && !gameState.currentUser) {
-                showPage('login');
-                return;
-            }
+// Form Elements
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+
+// Show a specific page
+function showPage(pageName) {
+    // Hide all pages
+    Object.values(pages).forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Show the requested page
+    pages[pageName].classList.add('active');
+    
+    // Special cases
+    if (pageName === 'dashboard' && !gameState.currentUser) {
+        showPage('login');
+        return;
+    }
+    
+    // Initialize game page if needed
+    if (pageName === 'game') {
+        initGame();
+    }
+}
+
+// Game Functions
+function generateProblem() {
+    const num1 = Math.floor(Math.random() * 12);
+    const num2 = Math.floor(Math.random() * 12);
+    return {
+        num1: num1,
+        num2: num2,
+        answer: num1 * num2
+    };
+}
+
+function updateProblem() {
+    gameState.currentProblem = generateProblem();
+    problemElement.textContent = `${gameState.currentProblem.num1} × ${gameState.currentProblem.num2}`;
+    answerInput.value = '';
+    answerInput.focus();
+}
+
+function checkAnswer() {
+    const userAnswer = parseInt(answerInput.value);
+    
+    if (isNaN(userAnswer)) {
+        alert("Please enter a valid number!");
+        return;
+    }
+
+    if (userAnswer === gameState.currentProblem.answer) {
+        gameState.score += 10;
+        gameState.streak += 1;
+        problemElement.style.color = '#4CAF50';
+    } else {
+        gameState.streak = 0;
+        problemElement.style.color = '#F44336';
+    }
+
+    updateStats();
+    setTimeout(() => {
+        problemElement.style.color = '';
+        updateProblem();
+    }, 500);
+}
+
+function updateStats() {
+    scoreElement.textContent = `Score: ${gameState.score}`;
+    streakElement.textContent = `Streak: ${gameState.streak}x`;
+}
+
+function startTimer() {
+    gameState.timeLeft = 60;
+    timeElement.textContent = `Time: ${gameState.timeLeft}s`;
+    
+    gameState.timer = setInterval(() => {
+        gameState.timeLeft--;
+        timeElement.textContent = `Time: ${gameState.timeLeft}s`;
+        
+        if (gameState.timeLeft <= 0) {
+            endGame();
         }
+    }, 1000);
+}
 
-        // Handle login
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            // Find user
-            const user = gameState.users.find(u => u.email === email && u.password === password);
-            
-            if (user) {
-                gameState.currentUser = user;
-                showPage('dashboard');
-                alert('Login successful!');
-            } else {
-                alert('Invalid email or password');
-            }
-        });
+function endGame() {
+    clearInterval(gameState.timer);
+    
+    // Update user points
+    if (gameState.currentUser) {
+        gameState.currentUser.points += gameState.score;
+        updateLeaderboard();
+    }
+    
+    // Show results
+    alert(`Game Over! Your score: ${gameState.score}`);
+    showPage('dashboard');
+    
+    // Reset game state
+    gameState.score = 0;
+    gameState.streak = 0;
+}
 
-        // Handle registration
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('register-username').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-confirm-password').value;
-            
-            // Validation
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-            }
-            
-            if (gameState.users.some(u => u.email === email)) {
-                alert('Email already registered');
-                return;
-            }
-            
-            // Create new user
-            const newUser = {
-                id: gameState.users.length + 1,
-                username,
-                email,
-                password,
-                points: 0,
-                rank: gameState.users.length + 1
-            };
-            
-            gameState.users.push(newUser);
-            gameState.currentUser = newUser;
-            
-            alert('Registration successful!');
-            showPage('dashboard');
-        });
+function skipProblem() {
+    gameState.streak = 0;
+    updateStats();
+    updateProblem();
+}
 
-        // Initialize the page
-        showPage('home');
+function initGame() {
+    updateProblem();
+    updateStats();
+    startTimer();
+}
+
+function updateLeaderboard() {
+    // Sort users by points
+    gameState.users.sort((a, b) => b.points - a.points);
+    
+    // Update ranks
+    gameState.users.forEach((user, index) => {
+        user.rank = index + 1;
+    });
+    
+    // Update leaderboard display (if on leaderboard page)
+    if (pages.leaderboard.classList.contains('active')) {
+        renderLeaderboard();
+    }
+}
+
+function renderLeaderboard() {
+    // Implementation for displaying leaderboard
+    // You'll need to add this based on your HTML structure
+}
+
+// Event Listeners
+submitButton.addEventListener('click', checkAnswer);
+skipButton.addEventListener('click', skipProblem);
+answerInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        checkAnswer();
+    }
+});
+
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    
+    const user = gameState.users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        gameState.currentUser = user;
+        showPage('dashboard');
+        alert('Login successful!');
+    } else {
+        alert('Invalid email or password');
+    }
+});
+
+registerForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('register-username').value;
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+    const confirmPassword = document.getElementById('register-confirm-password').value;
+    
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+    }
+    
+    if (gameState.users.some(u => u.email === email)) {
+        alert('Email already registered');
+        return;
+    }
+    
+    const newUser = {
+        id: gameState.users.length + 1,
+        username,
+        email,
+        password,
+        points: 0,
+        rank: gameState.users.length + 1
+    };
+    
+    gameState.users.push(newUser);
+    gameState.currentUser = newUser;
+    
+    alert('Registration successful!');
+    showPage('dashboard');
+});
+
+// Navigation event listeners would go here
+// Example: document.getElementById('play-btn').addEventListener('click', () => showPage('game'));
+
+// Initialize the page
+showPage('home');
     </script>
 </body>
 </html>

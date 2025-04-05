@@ -1,0 +1,18 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "iam learing backend",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "gannu"
+  ],
+  "author": "samrat",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
