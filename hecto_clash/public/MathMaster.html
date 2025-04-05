@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathMaster | Play Brain Games</title>
+    <style>
+        :root {
+            --primary: #ff6b6b; /* Coral */
+            --secondary: #4ecdc4; /* Turquoise */
+            --dark: #2d3436; /* Dark Gray */
+            --light: #f8e1e9; /* Soft Pink */
+            --correct: #55efc4; /* Light Green */
+            --wrong: #ff7675; /* Soft Red */
+            --gold: #ffd700; /* Gold */
+            --silver: #c0c0c0; /* Silver */
+            --bronze: #cd7f32; /* Bronze */
+            --accent: #ffe66d; /* Bright Yellow */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe6e6, #e0f7fa); /* Pink to Light Cyan */
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            animation: slideDown 0.5s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        /* Game Cards */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, var(--light), #ffffff);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 25px rgba(78, 205, 196, 0.4);
+            border-color: var(--accent);
+        }
+
+        .game-card h3 {
+            margin: 15px 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .game-card p {
+            color: var(--dark);
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .game-card .difficulty {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--warning));
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        /* Game Screens */
+        .game-screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-screen.active {
+            display: block;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .game-stat {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            color: var(--dark);
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .game-stat.pulse {
+            animation: pulse 0.5s ease;
+        }
+
+        /* Quick Math */
+        #quick-math-game .problem-display {
+            font-size: 3.5rem;
+            text-align: center;
+            margin: 50px 0;
+            color: var(--primary);
+            font-weight: 700;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #quick-math-game .problem-display.fade {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        #quick-math-game .answer-input {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.8rem;
+            text-align: center;
+            background: var(--light);
+            border: 3px solid var(--secondary);
+            border-radius: 15px;
+            color: var(--dark);
+            margin-bottom: 25px;
+            transition: border-color 0.3s ease;
+        }
+
+        #quick-math-game .answer-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), var(--warning));
+            color: var(--dark);
+        }
+
+        .btn-accent:hover {
+            background: var(--warning);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 202, 87, 0.4);
+        }
+
+        /* Feedback */
+        .feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: 700;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .feedback.show {
+            opacity: 1;
+            animation: fadeOut 1s ease forwards;
+        }
+
+        .feedback.correct {
+            color: var(--correct);
+        }
+
+        .feedback.wrong {
+            color: var(--wrong);
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .nav-links { gap: 15px; }
+            #quick-math-game .problem-display { font-size: 2.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .game-grid { grid-template-columns: 1fr; }
+            .game-header { flex-direction: column; gap: 15px; }
+            .game-stats { width: 100%; justify-content: space-between; }
+            .logo { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">MathMaster</div>
+                <div class="nav-links">
+                    <a href="index.html" onclick="showScreen('home')">Home</a>
+                    <a href="#" onclick="showScreen('games')">Games</a>
+                    <a href="#" onclick="showScreen('leaderboard')">Leaderboard</a>
+                    <a href="#" onclick="showScreen('profile')">Profile</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home Screen -->
+        <div id="home-screen" class="game-screen active">
+            <h1 style="font-size: 3rem; color: var(--primary); text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); animation: fadeInUp 0.8s ease;">Welcome to MathMaster!</h1>
+            <p style="font-size: 1.5rem; color: var(--dark); margin: 20px 0;">Challenge your brain with 20+ math and logic games.</p>
+            <button class="btn btn-primary" onclick="showScreen('games')">Browse Games</button>
+        </div>
+
+        <!-- Games List -->
+        <div id="games-screen" class="game-screen">
+            <h1 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 20px;">Choose Your Game</h1>
+            <div class="game-grid">
+                <a href="Quickmath.html"><div class="game-card" onclick="startGame('quick-math')">
+                    <div class="difficulty">Easy</div>
+                    <h3>Quick Math</h3>
+                    <p>Solve equations against the clock!</p>
+                </div>
+                </a>
+                <a href="MemoryGrid.html"><div class="game-card" onclick="startGame('memory-grid')">
+                    <div class="difficulty">Medium</div>
+                    <h3>Memory Grid</h3>
+                    <p>Match pairs of numbers.</p>
+                </div>
+                </a>
+                <a href="HectoClash.html"><div class="game-card" onclick="startGame('number-swipe')">
+                    <div class="difficulty">Hard</div>
+                    <h3>HectoClash</h3>
+                    <p>Sort numbers fast!</p>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Math Game -->
+        <div id="quick-math-game" class="game-screen" style="position: relative;">
+            <div class="game-header">
+                <h2 style="font-size: 2rem; color: var(--secondary);">Quick Math</h2>
+                <div class="game-stats">
+                    <div class="game-stat">Score: <span id="qm-score">0</span></div>
+                    <div class="game-stat">Time: <span id="qm-time">30</span>s</div>
+                    <div class="game-stat">Streak: <span id="qm-streak">0</span>x</div>
+                </div>
+            </div>
+            <div class="problem-display" id="qm-problem"></div>
+            <input type="number" id="qm-answer" class="answer-input" placeholder="Your answer..." autofocus>
+            <div style="text-align: center;">
+                <button class="btn btn-primary" onclick="checkQuickMathAnswer()">Submit</button>
+                <button class="btn btn-accent" onclick="generateQuickMathProblem()">Skip</button>
+            </div>
+            <div class="feedback" id="qm-feedback"></div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div id="leaderboard-screen" class="game-screen">
+            <h1 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 20px;">Global Leaderboard</h1>
+            <table style="width: 100%; max-width: 800px; margin: 0 auto; background: linear-gradient(135deg, var(--light), #ffffff); border-radius: 15px; padding: 20px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+                <thead>
+                    <tr style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--light);">
+                        <th style="padding: 15px;">Rank</th>
+                        <th style="padding: 15px;">Player</th>
+                        <th style="padding: 15px;">Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--gold); padding: 15px;">1</td>
+                        <td style="padding: 15px;">MathWizard</td>
+                        <td style="padding: 15px;">5,420</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--silver); padding: 15px;">2</td>
+                        <td style="padding: 15px;">NumberNinja</td>
+                        <td style="padding: 15px;">5,150</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--bronze); padding: 15px;">3</td>
+                        <td style="padding: 15px;">CalcQueen</td>
+                        <td style="padding: 15px;">4,980</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Profile -->
+        <div id="profile-screen" class="game-screen">
+            <h1 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 20px;">Your Profile</h1>
+            <div style="background: linear-gradient(135deg, var(--light), #ffffff); border-radius: 15px; padding: 25px; max-width: 600px; margin: 0 auto; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+                <h2 style="font-size: 1.8rem; color: var(--secondary); margin-bottom: 15px;">samrat ganesh</h2>
+                <p style="font-size: 1.2rem; color: var(--dark);">Total Score: <span id="profile-score">1,245</span></p>
+                <p style="font-size: 1.2rem; color: var(--dark);">Games Played: <span id="profile-games">24</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            currentGame: null,
+            user: { name: "Samrat Ganesh", totalScore: 1245, gamesPlayed: 24 },
+            quickMath: { score: 0, timeLeft: 30, streak: 0, timer: null, currentProblem: {} }
+        };
+
+        // Utility Functions
+        function showScreen(screenName) {
+            document.querySelectorAll('.game-screen').forEach(screen => screen.classList.remove('active'));
+            document.getElementById(`${screenName}-screen`).classList.add('active');
+            
+            if (gameState.currentGame && screenName !== gameState.currentGame) {
+                clearInterval(gameState[gameState.currentGame].timer);
+            }
+            gameState.currentGame = screenName === 'games' ? null : gameState.currentGame;
+        }
+
+        function startGame(gameId) {
+            gameState.currentGame = gameId;
+            showScreen(gameId);
+            if (gameId === 'quick-math') initQuickMath();
+        }
+
+        // Quick Math Game
+        function initQuickMath() {
+            const qm = gameState.quickMath;
+            qm.score = 0;
+            qm.timeLeft = 30;
+            qm.streak = 0;
+            updateQuickMathUI();
+            generateQuickMathProblem();
+            startQuickMathTimer();
+        }
+
+        function startQuickMathTimer() {
+            const qm = gameState.quickMath;
+            clearInterval(qm.timer);
+            qm.timer = setInterval(() => {
+                qm.timeLeft--;
+                updateQuickMathUI();
+                if (qm.timeLeft <= 0) {
+                    clearInterval(qm.timer);
+                    alert(`Time's up! Your score: ${qm.score}`);
+                    showScreen('games');
+                }
+            }, 1000);
+        }
+
+        function generateQuickMathProblem() {
+            const qm = gameState.quickMath;
+            const ops = ['+', '-', '×', '÷'];
+            const op = ops[Math.floor(Math.random() * ops.length)];
+            let num1, num2;
+
+            switch (op) {
+                case '+': num1 = rand(10, 50); num2 = rand(10, 50); break;
+                case '-': num1 = rand(30, 80); num2 = rand(0, num1); break;
+                case '×': num1 = rand(1, 12); num2 = rand(1, 12); break;
+                case '÷': num2 = rand(1, 10); num1 = num2 * rand(1, 10); break;
+            }
+
+            qm.currentProblem = { num1, num2, op, answer: calculateAnswer(num1, num2, op) };
+            const problemElement = document.getElementById('qm-problem');
+            problemElement.classList.add('fade');
+            setTimeout(() => {
+                problemElement.textContent = `${num1} ${op} ${num2} = ?`;
+                problemElement.classList.remove('fade');
+            }, 300);
+            document.getElementById('qm-answer').value = '';
+            document.getElementById('qm-answer').focus();
+        }
+
+        function calculateAnswer(num1, num2, op) {
+            return { '+': num1 + num2, '-': num1 - num2, '×': num1 * num2, '÷': num1 / num2 }[op];
+        }
+
+        function checkQuickMathAnswer() {
+            const qm = gameState.quickMath;
+            const userAnswer = parseFloat(document.getElementById('qm-answer').value);
+            const feedback = document.getElementById('qm-feedback');
+
+            if (userAnswer === qm.currentProblem.answer) {
+                qm.score += 10 + Math.floor(qm.streak / 3);
+                qm.streak++;
+                showFeedback('Correct!', 'correct');
+            } else {
+                qm.streak = 0;
+                showFeedback('Wrong!', 'wrong');
+            }
+
+            updateQuickMathUI();
+            generateQuickMathProblem();
+        }
+
+        function updateQuickMathUI() {
+            const qm = gameState.quickMath;
+            const scoreElement = document.getElementById('qm-score');
+            const timeElement = document.getElementById('qm-time');
+            const streakElement = document.getElementById('qm-streak');
+
+            scoreElement.textContent = qm.score;
+            timeElement.textContent = qm.timeLeft;
+            streakElement.textContent = qm.streak;
+
+            if (qm.score > 0) scoreElement.parentElement.classList.add('pulse');
+            setTimeout(() => scoreElement.parentElement.classList.remove('pulse'), 500);
+            if (qm.timeLeft <= 10) timeElement.parentElement.style.background = 'linear-gradient(135deg, var(--wrong), var(--warning))';
+            else timeElement.parentElement.style.background = 'linear-gradient(135deg, var(--secondary), var(--accent))';
+        }
+
+        function showFeedback(text, type) {
+            const feedback = document.getElementById('qm-feedback');
+            feedback.textContent = text;
+            feedback.className = `feedback ${type}`;
+            feedback.classList.add('show');
+            setTimeout(() => feedback.classList.remove('show'), 1000);
+        }
+
+        function rand(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Initialize
+        showScreen('home');
+    </script>
+</body>
+</html>

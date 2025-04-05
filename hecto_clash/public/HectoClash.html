@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hecto Clash - Mental Math Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff6b6b; /* Coral */
+            --secondary: #4ecdc4; /* Turquoise */
+            --accent: #ffe66d; /* Bright Yellow */
+            --dark: #2d3436; /* Dark Gray */
+            --light: #f8e1e9; /* Soft Pink */
+            --success: #55efc4; /* Light Green */
+            --danger: #ff7675; /* Soft Red */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light), #d8e2dc);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .game-container {
+            background: linear-gradient(135deg, var(--light), #ffffff);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat {
+            background: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        .stat.pulse {
+            animation: pulse 0.5s ease;
+        }
+
+        .problem {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin: 2rem 0;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .problem.fade {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .input-container {
+            margin-bottom: 1.5rem;
+        }
+
+        #expression {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        #expression:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+            outline: none;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            color: var(--light);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        .feedback {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .feedback.show {
+            opacity: 1;
+            animation: fadeOut 1s ease forwards;
+        }
+
+        .feedback.success { color: var(--success); }
+        .feedback.danger { color: var(--danger); }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.2); }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            .problem { font-size: 2rem; }
+            .stats { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Hecto Clash</h1>
+        <div class="stats">
+            <div class="stat" id="score">Score: 0</div>
+            <div class="stat" id="time">Time: 60s</div>
+            <div class="stat" id="streak">Streak: 0</div>
+        </div>
+        <div class="problem" id="problem">123456</div>
+        <div class="input-container">
+            <input type="text" id="expression" placeholder="e.g., 1+(2+3+4)*(5+6)" autofocus>
+        </div>
+        <div class="actions">
+            <button class="btn" id="submit">Submit</button>
+            <button class="btn btn-outline" id="skip">Skip</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            score: 0,
+            timeLeft: 60,
+            streak: 0,
+            currentDigits: null,
+            timer: null
+        };
+
+        // DOM Elements
+        const problemElement = document.getElementById('problem');
+        const expressionInput = document.getElementById('expression');
+        const submitButton = document.getElementById('submit');
+        const skipButton = document.getElementById('skip');
+        const scoreElement = document.getElementById('score');
+        const timeElement = document.getElementById('time');
+        const streakElement = document.getElementById('streak');
+        const feedbackElement = document.getElementById('feedback');
+
+        // Helper Functions
+        function rand(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateDigits() {
+            return Array.from({ length: 6 }, () => rand(1, 9)).join('');
+        }
+
+        function evaluateExpression(digits, expr) {
+            try {
+                // Replace digits with their values in order
+                let sanitizedExpr = expr;
+                for (let i = 0; i < 6; i++) {
+                    sanitizedExpr = sanitizedExpr.replace(new RegExp(`\\b${i + 1}\\b`, 'g'), digits[i]);
+                }
+                // Only allow +, -, *, /, ^, and ()
+                sanitizedExpr = sanitizedExpr.replace(/[^0-9+\-*/^()]/g, '');
+                // Basic evaluation (no built-in eval for safety)
+                const result = new Function(`return ${sanitizedExpr}`)();
+                return isNaN(result) ? null : result;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function usesAllDigitsInOrder(digits, expr) {
+            const digitPattern = digits.split('').join('.*?');
+            return new RegExp(`^.*?${digitPattern}.*$`).test(expr.replace(/[^1-9]/g, ''));
+        }
+
+        // Game Logic
+        function updateProblem() {
+            gameState.currentDigits = generateDigits();
+            problemElement.classList.add('fade');
+            setTimeout(() => {
+                problemElement.textContent = gameState.currentDigits;
+                problemElement.classList.remove('fade');
+            }, 300);
+            expressionInput.value = '';
+            expressionInput.focus();
+        }
+
+        function checkAnswer() {
+            const expr = expressionInput.value.trim();
+            if (!expr) {
+                showFeedback('Enter an expression!', 'danger');
+                return;
+            }
+
+            if (!usesAllDigitsInOrder(gameState.currentDigits, expr)) {
+                showFeedback('Use all digits in order!', 'danger');
+                return;
+            }
+
+            const result = evaluateExpression(gameState.currentDigits, expr);
+            if (result === null) {
+                showFeedback('Invalid expression!', 'danger');
+                return;
+            }
+
+            if (Math.abs(result - 100) < 0.01) { // Allow small floating-point errors
+                gameState.score += 10 + gameState.streak;
+                gameState.streak++;
+                showFeedback('Correct!', 'success');
+                setTimeout(updateProblem, 500);
+            } else {
+                gameState.streak = 0;
+                showFeedback(`Wrong! Result: ${result}`, 'danger');
+            }
+
+            updateStats();
+        }
+
+        function showFeedback(text, type) {
+            feedbackElement.textContent = text;
+            feedbackElement.className = `feedback ${type}`;
+            feedbackElement.classList.add('show');
+            setTimeout(() => feedbackElement.classList.remove('show'), 1000);
+        }
+
+        function updateStats() {
+            scoreElement.textContent = `Score: ${gameState.score}`;
+            timeElement.textContent = `Time: ${gameState.timeLeft}s`;
+            streakElement.textContent = `Streak: ${gameState.streak}`;
+
+            scoreElement.parentElement.classList.add('pulse');
+            setTimeout(() => scoreElement.parentElement.classList.remove('pulse'), 500);
+
+            timeElement.style.background = gameState.timeLeft <= 10 ? 'var(--danger)' : 'var(--accent)';
+        }
+
+        function startTimer() {
+            gameState.timeLeft = 60;
+            if (gameState.timer) clearInterval(gameState.timer);
+            gameState.timer = setInterval(() => {
+                gameState.timeLeft--;
+                updateStats();
+                if (gameState.timeLeft <= 0) endGame();
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(gameState.timer);
+            alert(`Game Over! Your score: ${gameState.score}`);
+            gameState.score = 0;
+            gameState.streak = 0;
+            initGame();
+        }
+
+        function skipProblem() {
+            gameState.streak = 0;
+            updateStats();
+            updateProblem();
+        }
+
+        function initGame() {
+            updateProblem();
+            updateStats();
+            startTimer();
+        }
+
+        // Event Listeners
+        submitButton.addEventListener('click', checkAnswer);
+        skipButton.addEventListener('click', skipProblem);
+        expressionInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkAnswer();
+        });
+
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>
