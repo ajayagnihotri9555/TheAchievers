@@ -241,7 +241,7 @@
                 num1,
                 num2,
                 operation,
-                display: '${num1} ${operation} ${num2}' ,
+                display:` ${num1} ${operation} ${num2}`,
                 answer: calculateAnswer(num1, num2, operation)
             };
         }
@@ -268,7 +268,7 @@
             
             timer = setInterval(() => {
                 timeLeft -= 0.1;
-                timerBar.style.width = '${(timeLeft / 10) * 100}% ';
+                timerBar.style.width = `${(timeLeft / 10) * 100}%`;
                 
                 if(timeLeft <= 0) {
                     clearInterval(timer);

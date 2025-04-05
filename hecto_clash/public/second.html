@@ -442,8 +442,8 @@
             
             gameState.levels.forEach((level, index) => {
                 const button = document.createElement('div');
-                button.className = `level-btn ${index + 1 > gameState.levelsUnlocked ? 'locked' : ''}`;
-                button.textContent = '${index + 1}: ${level.name}';
+                button.className = level-btn `${index + 1 > gameState.levelsUnlocked ? 'locked' : ''}`;
+                button.textContent = `${index + 1}: ${level.name}`;
                 
                 if (index + 1 <= gameState.levelsUnlocked) {
                     button.addEventListener('click', () => {
@@ -490,7 +490,7 @@
             
             // Update progress
             const progress = (gameState.currentPuzzleIndex / level.puzzles.length) * 100;
-            gameElements.progressBar.style.width = '${progress}%' ;
+            gameElements.progressBar.style.width = `${progress}%`;
         }
 
         // Check the selected answer
@@ -544,8 +544,8 @@
                 const tx = (Math.random() - 0.5) * 100;
                 const ty = (Math.random() - 0.5) * 100;
                 
-                particle.style.left = `${x}px ` ;
-                particle.style.top =` ${y}px`;
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
                 particle.style.setProperty('--tx', `${tx}px`);
                 particle.style.setProperty('--ty', `${ty}px`);
                 
