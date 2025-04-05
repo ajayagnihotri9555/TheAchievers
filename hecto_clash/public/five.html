@@ -144,7 +144,9 @@
             from {
                 opacity: 0;
                 transform: translateY(20px);
-            }
+
+
+}
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -282,7 +284,8 @@
             const operation = operations[Math.floor(Math.random() * operations.length)];
             let num1, num2;
 
-            if (operation === '+') {
+
+if (operation === '+') {
                 num1 = Math.floor(Math.random() * 50) + 10;
                 num2 = Math.floor(Math.random() * 50) + 10;
             } else if (operation === '-') {
@@ -365,9 +368,10 @@
             setTimeout(() => scoreElement.classList.remove('score-animate'), 300);
         }
 
-        function updateTimer() {
+
+function updateTimer() {
             const timerElement = document.getElementById('timer');
-            timerElement.textContent = Time `left: ${timeLeft}s`;
+            timerElement.textContent = `Time left: ${timeLeft}s`;
             
             // Update progress bar
             const progress = (timeLeft / gameTime) * 100;
@@ -431,7 +435,8 @@
             }
         }
 
-        function createConfetti() {
+
+function createConfetti() {
             for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
