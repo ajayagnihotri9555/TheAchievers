@@ -1,0 +1,29 @@
+{
+  "name": "hecto_clash",
+  "version": "1.0.0",
+  "description": "iam learing backend",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "gannu"
+  ],
+  "author": "samrat",
+  "license": "ISC",
+  "dependencies": {
+<<<<<<< HEAD:Backend/package.json
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mysql": "^2.18.1",
+    "nodemon": "^3.1.9"
+  },
+  "devDependencies": {}
+=======
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+>>>>>>> 4812cbb (authentication commit):hecto_clash/Backend/package.json
+}
